@@ -3,11 +3,11 @@ package accounts
 import (
 	"fmt"
 
-	"github.com/mastermel/dccs-to-ynab/config"
+	"github.com/mastermel/dccs-to-ynab/app"
 )
 
 func List() {
-	var config config.Config
+	var config app.Config
 	config.Read()
 
 	if len(config.Accounts) < 1 {

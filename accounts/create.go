@@ -4,13 +4,14 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"strconv"
 	"strings"
 
 	"github.com/manifoldco/promptui"
-	"github.com/mastermel/dccs-to-ynab/config"
+	"github.com/mastermel/dccs-to-ynab/app"
 )
 
-func validateUniqueName(config config.Config, input string) error {
+func validateUniqueName(config app.Config, input string) error {
 	if len(config.Accounts) > 0 {
 		for _, account := range config.Accounts {
 			if strings.EqualFold(account.Name, input) {
@@ -22,10 +23,7 @@ func validateUniqueName(config config.Config, input string) error {
 	return nil
 }
 
-func Create() {
-	var config config.Config
-	config.Read()
-
+func promptName(config app.Config) string {
 	prompt := promptui.Prompt{
 		Label: "Name",
 		Validate: func(input string) error {
@@ -41,5 +39,37 @@ func Create() {
 		log.Panic("Prompt failed: ", err)
 	}
 
-	fmt.Printf("You choose %q\n", name)
+	return name
+}
+
+func promptSyncEnabled() bool {
+	prompt := promptui.Select{
+		Label: "Enable Sync",
+		Items: []string{"true", "false"},
+	}
+
+	_, result, err := prompt.Run()
+	if err != nil {
+		log.Panic("Prompt failed: ", err)
+	}
+
+	enabled, err := strconv.ParseBool(result)
+	return enabled
+}
+
+func Create() {
+	var config app.Config
+	config.Read()
+
+	name := promptName(config)
+	syncEnabled := promptSyncEnabled()
+
+	config.AddAccount(app.Account{
+		Name:        name,
+		SyncEnabled: syncEnabled,
+	})
+
+	config.Write()
+
+	fmt.Println("Account added successfully!")
 }
