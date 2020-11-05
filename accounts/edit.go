@@ -19,7 +19,7 @@ func Edit(name string) {
 
 	account := config.GetAccountByName(name)
 	if account == nil {
-		fmt.Println("Could not find account with name: ", name)
+		fmt.Println("Could not find account with name:", name)
 		return
 	}
 

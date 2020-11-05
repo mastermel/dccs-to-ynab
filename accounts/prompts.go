@@ -2,6 +2,7 @@ package accounts
 
 import (
 	"errors"
+	"fmt"
 	"log"
 	"strconv"
 	"strings"
@@ -64,6 +65,11 @@ func promptSyncEnabled() bool {
 
 func promptForExistingAccountName(config app.Config, quitPrompt string) string {
 	options := config.GetAccountNames()
+	if len(options) < 1 {
+		fmt.Println("No accounts yet. Use `accounts create` to get started!")
+		return ""
+	}
+
 	options = append(options, quitPrompt)
 
 	prompt := promptui.Select{

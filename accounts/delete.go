@@ -17,8 +17,10 @@ func Delete(name string) {
 		}
 	}
 
-	config.RemoveAccountByName(name)
-	config.Write()
-
-	fmt.Println("Removed", name)
+	if config.RemoveAccountByName(name) {
+		config.Write()
+		fmt.Println("Removed", name)
+	} else {
+		fmt.Println("No account exists named:", name)
+	}
 }

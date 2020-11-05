@@ -3,6 +3,7 @@ package app
 import (
 	"io/ioutil"
 	"log"
+	"os"
 	"path/filepath"
 
 	homedir "github.com/mitchellh/go-homedir"
@@ -33,6 +34,10 @@ func getConfigFilePath() string {
 
 func (config *Config) Read() *Config {
 	path := getConfigFilePath()
+
+	if _, err := os.Stat(path); os.IsNotExist(err) {
+		return config
+	}
 
 	data, err := ioutil.ReadFile(path)
 	if err != nil {
@@ -91,7 +96,7 @@ func (config *Config) GetAccountByName(name string) *Account {
 	return result
 }
 
-func (config *Config) RemoveAccountByName(name string) *Config {
+func (config *Config) RemoveAccountByName(name string) bool {
 	index := len(config.Accounts)
 
 	for i, account := range config.Accounts {
@@ -104,7 +109,8 @@ func (config *Config) RemoveAccountByName(name string) *Config {
 	// If we found the doomed account, remove it
 	if index < len(config.Accounts) {
 		config.Accounts = append(config.Accounts[:index], config.Accounts[index+1:]...)
+		return true
 	}
 
-	return config
+	return false
 }
