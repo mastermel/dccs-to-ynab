@@ -1,5 +1,5 @@
 # Build output
-./dccs-to-ynab
+#./dccs-to-ynab
 
 # Binaries for programs and plugins
 *.exe
