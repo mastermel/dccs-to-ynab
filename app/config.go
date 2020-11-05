@@ -12,7 +12,7 @@ import (
 const configFileName = ".dccs-to-ynab.yaml"
 
 type Config struct {
-	Accounts []Account `yaml:"accounts"`
+	Accounts []*Account `yaml:"accounts"`
 }
 
 type Account struct {
@@ -63,7 +63,7 @@ func (config *Config) Write() *Config {
 	return config
 }
 
-func (config *Config) AddAccount(account Account) *Config {
+func (config *Config) AddAccount(account *Account) *Config {
 	config.Accounts = append(config.Accounts, account)
 
 	return config
@@ -77,6 +77,18 @@ func (config *Config) GetAccountNames() []string {
 	}
 
 	return names
+}
+
+func (config *Config) GetAccountByName(name string) *Account {
+	var result *Account
+
+	for _, account := range config.Accounts {
+		if account.Name == name {
+			return account
+		}
+	}
+
+	return result
 }
 
 func (config *Config) RemoveAccountByName(name string) *Config {
