@@ -68,3 +68,31 @@ func (config *Config) AddAccount(account Account) *Config {
 
 	return config
 }
+
+func (config *Config) GetAccountNames() []string {
+	names := make([]string, len(config.Accounts))
+
+	for i, account := range config.Accounts {
+		names[i] = account.Name
+	}
+
+	return names
+}
+
+func (config *Config) RemoveAccountByName(name string) *Config {
+	index := len(config.Accounts)
+
+	for i, account := range config.Accounts {
+		if account.Name == name {
+			index = i
+			break
+		}
+	}
+
+	// If we found the doomed account, remove it
+	if index < len(config.Accounts) {
+		config.Accounts = append(config.Accounts[:index], config.Accounts[index+1:]...)
+	}
+
+	return config
+}
