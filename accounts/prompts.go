@@ -11,6 +11,9 @@ import (
 	"github.com/mastermel/dccs-to-ynab/app"
 )
 
+const labelDccsUsername = "DCCS Username"
+const labelDccsPassword = "DCCS Password"
+
 func validateUniqueName(config app.Config, input string) error {
 	if len(config.Accounts) > 0 {
 		for _, account := range config.Accounts {
@@ -61,6 +64,27 @@ func promptSyncEnabled() bool {
 
 	enabled, err := strconv.ParseBool(result)
 	return enabled
+}
+
+func promptText(label, initial string) string {
+	prompt := promptui.Prompt{
+		Label:   label,
+		Default: initial,
+		Validate: func(input string) error {
+			if len(input) < 1 {
+				return errors.New("Value required")
+			}
+
+			return nil
+		},
+	}
+
+	value, err := prompt.Run()
+	if err != nil {
+		log.Panic("Prompt failed: ", err)
+	}
+
+	return value
 }
 
 func promptForExistingAccountName(config app.Config, quitPrompt string) string {

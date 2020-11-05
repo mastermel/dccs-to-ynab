@@ -10,12 +10,11 @@ func Create() {
 	var config app.Config
 	config.Read()
 
-	name := promptName(config, "")
-	syncEnabled := promptSyncEnabled()
-
 	config.AddAccount(&app.Account{
-		Name:        name,
-		SyncEnabled: syncEnabled,
+		Name:         promptName(config, ""),
+		SyncEnabled:  promptSyncEnabled(),
+		DccsUsername: promptText(labelDccsUsername, ""),
+		DccsPassword: promptText(labelDccsPassword, ""),
 	})
 
 	config.Write()

@@ -25,6 +25,8 @@ func Edit(name string) {
 
 	account.Name = promptName(config, account.Name)
 	account.SyncEnabled = promptSyncEnabled()
+	account.DccsUsername = promptText("DCCS Username", account.DccsUsername)
+	account.DccsPassword = promptText("DCCS Password", account.DccsPassword)
 
 	config.Write()
 
