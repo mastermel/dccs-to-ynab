@@ -15,6 +15,7 @@ func Create() {
 		SyncEnabled:  promptSyncEnabled(),
 		DccsUsername: promptText(labelDccsUsername, ""),
 		DccsPassword: promptText(labelDccsPassword, ""),
+		DccsPayCode:  promptText(labelDccsPaycode, ""),
 	})
 
 	config.Write()

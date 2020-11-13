@@ -13,6 +13,7 @@ import (
 
 const labelDccsUsername = "DCCS Username"
 const labelDccsPassword = "DCCS Password"
+const labelDccsPaycode = "DCCS Pay Code"
 
 func validateUniqueName(config app.Config, input string) error {
 	if len(config.Accounts) > 0 {

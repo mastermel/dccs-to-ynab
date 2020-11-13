@@ -21,6 +21,7 @@ type Account struct {
 	SyncEnabled  bool   `yaml:"sync"`
 	DccsUsername string `yaml:"dccs_username"`
 	DccsPassword string `yaml:"dccs_password"`
+	DccsPayCode  string `yaml:"dccs_paycode"`
 }
 
 func getConfigFilePath() string {
