@@ -10,6 +10,8 @@ import (
 )
 
 func Sync() {
+	fmt.Println("Syncing on", time.Now().Format("Mon Jan 2 15:04:05 MST 2006"))
+
 	var config app.Config
 	config.Read()
 
