@@ -13,7 +13,7 @@ func (app *DccsApp) GetCards() *DccsApp {
 	}
 
 	response, err := app.Client.R().
-		SetResult([]Card{}).
+		SetResult([]*Card{}).
 		Get(getUserCardsPath)
 
 	if err != nil {
@@ -25,7 +25,7 @@ func (app *DccsApp) GetCards() *DccsApp {
 		return nil
 	} else {
 		fmt.Println("Got cards!")
-		app.Cards = response.Result().(*[]Card)
+		app.Cards = *response.Result().(*[]*Card)
 	}
 
 	return app
@@ -37,9 +37,9 @@ func (app *DccsApp) FindTargetCard() *DccsApp {
 	}
 
 	var card *Card
-	for _, c := range *app.Cards {
+	for _, c := range app.Cards {
 		if strings.EqualFold(c.PayCode, app.Config.DccsPayCode) {
-			card = &c
+			card = c
 			break
 		}
 	}

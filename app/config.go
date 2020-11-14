@@ -5,11 +5,13 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"time"
 
 	homedir "github.com/mitchellh/go-homedir"
 	"gopkg.in/yaml.v2"
 )
 
+const LastSyncFormat = "2006-01-02T15:04:05"
 const configFileName = ".dccs-to-ynab.yaml"
 
 type Config struct {
@@ -17,11 +19,15 @@ type Config struct {
 }
 
 type Account struct {
-	Name         string `yaml:"name"`
-	SyncEnabled  bool   `yaml:"sync"`
-	DccsUsername string `yaml:"dccs_username"`
-	DccsPassword string `yaml:"dccs_password"`
-	DccsPayCode  string `yaml:"dccs_paycode"`
+	Name          string `yaml:"name"`
+	SyncEnabled   bool   `yaml:"sync"`
+	DccsUsername  string `yaml:"dccs_username"`
+	DccsPassword  string `yaml:"dccs_password"`
+	DccsPayCode   string `yaml:"dccs_paycode"`
+	LastSync      string `yaml:"last_sync"`
+	YnabToken     string `yaml:"ynab_token"`
+	YnabBudgetId  string `yaml:"ynab_budget_id"`
+	YnabAccountId string `yaml:"ynab_account_id"`
 }
 
 func getConfigFilePath() string {
@@ -116,4 +122,17 @@ func (config *Config) RemoveAccountByName(name string) bool {
 	}
 
 	return false
+}
+
+func (account *Account) LastSyncTime() time.Time {
+	t, err := time.Parse(LastSyncFormat, account.LastSync)
+	if err != nil {
+		log.Panicf("Could not parse last sync for $s: $s", account.Name, account.LastSync)
+	}
+
+	return t
+}
+
+func (account *Account) SetLastSyncTime(t time.Time) {
+	account.LastSync = t.Format(LastSyncFormat)
 }

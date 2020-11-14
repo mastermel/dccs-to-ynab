@@ -9,11 +9,15 @@ import (
 
 	"github.com/manifoldco/promptui"
 	"github.com/mastermel/dccs-to-ynab/app"
+
+	"go.bmvs.io/ynab"
 )
 
 const labelDccsUsername = "DCCS Username"
 const labelDccsPassword = "DCCS Password"
 const labelDccsPaycode = "DCCS Pay Code"
+const labelLastSync = "Date to sync from (yyyy-mm-ddThh:mm:ss)"
+const labelYnabToken = "YNAB API Token"
 
 func validateUniqueName(config app.Config, input string) error {
 	if len(config.Accounts) > 0 {
@@ -112,4 +116,59 @@ func promptForExistingAccountName(config app.Config, quitPrompt string) string {
 	}
 
 	return result
+}
+
+func promptForYnabBudgetId(client ynab.ClientServicer) string {
+	if budgets, err := client.Budget().GetBudgets(); err == nil {
+		options := make([]string, 0)
+		for _, budget := range budgets {
+			options = append(options, budget.Name)
+		}
+
+		prompt := promptui.Select{
+			Label: "Which YNAB budget to sync with?",
+			Items: options,
+		}
+
+		i, _, err := prompt.Run()
+		if err != nil {
+			log.Panic("Prompt failed:", err)
+		}
+
+		return budgets[i].ID
+	} else {
+		fmt.Println("Failed to fetch YNAB budgets!")
+		fmt.Println(err)
+		return ""
+	}
+
+	return ""
+}
+
+func promptForYnabAccountId(client ynab.ClientServicer, ynabBudgetId string) string {
+	if accounts, err := client.Account().GetAccounts(ynabBudgetId); err == nil {
+		options := make([]string, 0)
+
+		for _, account := range accounts {
+			options = append(options, fmt.Sprintf("%s: %s", account.Type, account.Name))
+		}
+
+		prompt := promptui.Select{
+			Label: "Which YNAB account to sync with?",
+			Items: options,
+		}
+
+		i, _, err := prompt.Run()
+		if err != nil {
+			log.Panic("Prompt failed:", err)
+		}
+
+		return accounts[i].ID
+	} else {
+		fmt.Println("Failed to fetch YNAB accounts!")
+		fmt.Println(err)
+		return ""
+	}
+
+	return ""
 }

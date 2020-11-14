@@ -2,9 +2,11 @@ package accounts
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/mastermel/dccs-to-ynab/app"
 	"github.com/mastermel/dccs-to-ynab/dccs"
+	"github.com/mastermel/dccs-to-ynab/ynab"
 )
 
 func Sync() {
@@ -23,18 +25,32 @@ func Sync() {
 			fmt.Println("Skipping account:", account.Name)
 		}
 	}
+
+	config.Write()
 }
 
 func syncAccount(account *app.Account) {
-	fmt.Println("Syncing account:", account.Name, "...")
+	fmt.Printf("Syncing account: %s...\n", account.Name)
 
 	dccsApp := dccs.New(account)
 	result := dccsApp.Login().
 		GetCards().
 		FindTargetCard().
-		GetTransactions()
+		LoadTransactions().
+		CleanTransactions()
 
 	if result == nil {
 		return
 	}
+
+	new_transactions := dccsApp.GetNewTransactions()
+	new_count := len(new_transactions)
+	if new_count > 0 {
+		fmt.Printf("Syncing %d new transactions...\n", new_count)
+		ynab.ImportTransactionsToYnab(account, new_transactions)
+	} else {
+		fmt.Println("No new transactions since", account.LastSync)
+	}
+
+	account.SetLastSyncTime(time.Now())
 }

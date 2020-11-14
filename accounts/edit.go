@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/mastermel/dccs-to-ynab/app"
+	"go.bmvs.io/ynab"
 )
 
 func Edit(name string) {
@@ -25,9 +26,16 @@ func Edit(name string) {
 
 	account.Name = promptName(config, account.Name)
 	account.SyncEnabled = promptSyncEnabled()
+	account.LastSync = promptText(labelLastSync, account.LastSync)
+
 	account.DccsUsername = promptText(labelDccsUsername, account.DccsUsername)
 	account.DccsPassword = promptText(labelDccsPassword, account.DccsPassword)
 	account.DccsPayCode = promptText(labelDccsPaycode, account.DccsPayCode)
+
+	account.YnabToken = promptText(labelYnabToken, account.YnabToken)
+	ynab_client := ynab.NewClient(account.YnabToken)
+	account.YnabBudgetId = promptForYnabBudgetId(ynab_client)
+	account.YnabAccountId = promptForYnabAccountId(ynab_client, account.YnabBudgetId)
 
 	config.Write()
 

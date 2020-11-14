@@ -2,13 +2,19 @@ package dccs
 
 import (
 	"fmt"
+	"regexp"
 	"strconv"
+	"strings"
 	"time"
 )
 
 const transactionsPath = "card-account-service/v1/card/history/transactionHistory/year"
 
-func (app *DccsApp) GetTransactions() *DccsApp {
+const dateRegexp = `^(.*)(\.[\d]+)$`
+const dateRegexReplacement = `$1`
+const dateParseLayout = "2006-01-02T15:04:05"
+
+func (app *DccsApp) LoadTransactions() *DccsApp {
 	if app == nil {
 		return app
 	}
@@ -24,7 +30,7 @@ func (app *DccsApp) GetTransactions() *DccsApp {
 			"period":              "true",
 			"includeIssuedChecks": "false",
 		}).
-		SetResult([]Transaction{}).
+		SetResult([]*Transaction{}).
 		Get(transactionsPath)
 
 	if err != nil {
@@ -35,9 +41,52 @@ func (app *DccsApp) GetTransactions() *DccsApp {
 		fmt.Println("Unauthorized! Please check the credentials and try again.")
 		return nil
 	} else {
-		app.Transactions = response.Result().(*[]Transaction)
-		fmt.Printf("Got %d transactions!", len(*app.Transactions))
+		app.Transactions = *response.Result().(*[]*Transaction)
+		fmt.Printf("Got %d transactions!\n", len(app.Transactions))
 	}
 
 	return app
+}
+
+func (app *DccsApp) CleanTransactions() *DccsApp {
+	if app == nil {
+		return app
+	}
+
+	for _, transaction := range app.Transactions {
+		parseTransactionDate(transaction)
+		cleanSecondaryCardholderName(transaction)
+	}
+
+	return app
+}
+
+func cleanSecondaryCardholderName(transaction *Transaction) {
+	transaction.SecondaryCardholderName = strings.Title(strings.ToLower(transaction.SecondaryCardholderName))
+}
+
+func parseTransactionDate(transaction *Transaction) {
+	var re = regexp.MustCompile(dateRegexp)
+	cleanDate := re.ReplaceAllString(transaction.TransactionDate, dateRegexReplacement)
+	date, err := time.Parse(dateParseLayout, cleanDate)
+	if err == nil {
+		transaction.TransactionDateTime = date
+	} else {
+		fmt.Println("Failed to parse transaction date:", cleanDate)
+	}
+}
+
+func (app *DccsApp) GetNewTransactions() []*Transaction {
+	transactions := make([]*Transaction, 0)
+	lastSync := app.Config.LastSyncTime()
+
+	for _, transaction := range app.Transactions {
+		tTime := &transaction.TransactionDateTime
+
+		if !tTime.IsZero() && tTime.After(lastSync) {
+			transactions = append(transactions, transaction)
+		}
+	}
+
+	return transactions
 }

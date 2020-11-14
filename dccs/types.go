@@ -3,6 +3,7 @@ package dccs
 import (
 	"encoding/json"
 	"log"
+	"time"
 
 	"github.com/go-resty/resty/v2"
 	"github.com/mastermel/dccs-to-ynab/app"
@@ -15,9 +16,9 @@ type DccsApp struct {
 	Config       *app.Account
 	Client       *resty.Client
 	User         *UserData
-	Cards        *[]Card
+	Cards        []*Card
 	TargetCard   *Card
-	Transactions *[]Transaction
+	Transactions []*Transaction
 }
 
 type UserData struct {
@@ -49,7 +50,7 @@ type Card struct {
 type Transaction struct {
 	TransactionId                string      `json:"transactionId"`
 	PrimaryCardholderId          json.Number `json:"primaryCardholderId"`
-	Amount                       int         `json:"amount"`
+	Amount                       int64       `json:"amount"`
 	SecondaryCardholderId        json.Number `json:"secondaryCardholderId"`
 	SecondaryCardholderName      string      `json:"secondaryCardholderName"`
 	Description                  string      `json:"description"`
@@ -63,6 +64,8 @@ type Transaction struct {
 	TransactionType              string      `json:"transactionType"`
 	TypeCode                     string      `json:"typeCode"`
 	TypeLabel                    string      `json:"typeLabel"`
+
+	TransactionDateTime time.Time
 }
 
 func New(config *app.Account) *DccsApp {
