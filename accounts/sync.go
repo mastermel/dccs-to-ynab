@@ -10,7 +10,9 @@ import (
 )
 
 func Sync() {
+	fmt.Println("")
 	fmt.Println("Syncing on", time.Now().Format("Mon Jan 2 15:04:05 MST 2006"))
+	fmt.Println("---------------------------------------")
 
 	var config app.Config
 	config.Read()
@@ -55,4 +57,5 @@ func syncAccount(account *app.Account) {
 	}
 
 	account.SetLastSyncTime(time.Now())
+	fmt.Println("")
 }
