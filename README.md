@@ -8,7 +8,7 @@ You can find instructions for downloading and installing the latest version of G
 at [https://golang.org/doc/install](https://golang.org/doc/install)
 
 ### Get the app
-*Note:*
+**Note:**
 Right now there's something screwy in how `go get` resolves the `go.bmvs.io/ynab` module.
 It somehow installs v2.0.0, where I can only get this app to to depend on v1.3.0. The later
 version changes the signature for a method depended on, and thus is incompatible with this
@@ -30,7 +30,7 @@ dccs-to-ynab accounts create
 You'll be asked for the following fields:
 
 #### Name
-A friendly name to identify this account by. Maybe use yours?
+A friendly name to identify this account by. Maybe use your own?
 
 #### Enable Sync?
 Whether you want to sync transactions for this account when `sync` is run. Use `false` if you
@@ -52,10 +52,10 @@ The pay code associated with the DCCS Card you want to pull transactions from. F
 
 #### YNAB API Token
 The complete API Token generated for the YNAB account you want to import transactions into.
-See [https://api.youneedabudget.com/](https://api.youneedabudget.com/) for instructions on
+See [https://api.youneedabudget.com](https://api.youneedabudget.com) for instructions on
 generating an API token.
 
-*Note:* if the API token you provide is not valid, you will be unable to complete the account configuration.
+**Note:** if the API token you provide is not valid, you will be unable to complete the account configuration.
 
 #### YNAB Budget to sync to?
 Granted you provided a valid API Token in the previous step, you'll be prompted with a list
