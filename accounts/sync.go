@@ -56,6 +56,5 @@ func syncAccount(account *app.Account) {
 		fmt.Println("No new transactions since", account.LastSync)
 	}
 
-	account.SetLastSyncTime(time.Now())
 	fmt.Println("")
 }

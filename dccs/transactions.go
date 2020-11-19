@@ -83,8 +83,9 @@ func (app *DccsApp) GetNewTransactions() []*Transaction {
 	for _, transaction := range app.Transactions {
 		tTime := &transaction.TransactionDateTime
 
-		if !tTime.IsZero() && tTime.After(lastSync) {
+		if !tTime.IsZero() && tTime.After(lastSync) && !app.Config.SeenTransactionId(transaction.TransactionId) {
 			transactions = append(transactions, transaction)
+			app.Config.SaveTransactionId(transaction.TransactionId)
 		}
 	}
 

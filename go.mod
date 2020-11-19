@@ -3,6 +3,7 @@ module github.com/mastermel/dccs-to-ynab
 go 1.11
 
 require (
+	github.com/davecgh/go-spew v1.1.1
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
 	github.com/go-resty/resty/v2 v2.3.0
 	github.com/lunixbochs/vtclean v1.0.0 // indirect

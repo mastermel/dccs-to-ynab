@@ -19,15 +19,16 @@ type Config struct {
 }
 
 type Account struct {
-	Name          string `yaml:"name"`
-	SyncEnabled   bool   `yaml:"sync"`
-	DccsUsername  string `yaml:"dccs_username"`
-	DccsPassword  string `yaml:"dccs_password"`
-	DccsPayCode   string `yaml:"dccs_paycode"`
-	LastSync      string `yaml:"last_sync"`
-	YnabToken     string `yaml:"ynab_token"`
-	YnabBudgetId  string `yaml:"ynab_budget_id"`
-	YnabAccountId string `yaml:"ynab_account_id"`
+	Name               string              `yaml:"name"`
+	SyncEnabled        bool                `yaml:"sync"`
+	DccsUsername       string              `yaml:"dccs_username"`
+	DccsPassword       string              `yaml:"dccs_password"`
+	DccsPayCode        string              `yaml:"dccs_paycode"`
+	DccsTransactionIds map[string]struct{} `yaml:"dccs_previous_transaction_ids,omitempty"`
+	LastSync           string              `yaml:"last_sync"`
+	YnabToken          string              `yaml:"ynab_token"`
+	YnabBudgetId       string              `yaml:"ynab_budget_id"`
+	YnabAccountId      string              `yaml:"ynab_account_id"`
 }
 
 func getConfigFilePath() string {
@@ -135,4 +136,17 @@ func (account *Account) LastSyncTime() time.Time {
 
 func (account *Account) SetLastSyncTime(t time.Time) {
 	account.LastSync = t.Format(LastSyncFormat)
+}
+
+func (account *Account) SeenTransactionId(id string) bool {
+	if account.DccsTransactionIds == nil {
+		account.DccsTransactionIds = make(map[string]struct{})
+	}
+
+	_, ok := account.DccsTransactionIds[id]
+	return ok
+}
+
+func (account *Account) SaveTransactionId(id string) {
+	account.DccsTransactionIds[id] = struct{}{}
 }
