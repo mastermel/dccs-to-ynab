@@ -1,6 +1,8 @@
 package dccs
 
-import "fmt"
+import (
+	"fmt"
+)
 
 const loginPath = "v1.1/login"
 

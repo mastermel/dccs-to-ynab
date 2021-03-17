@@ -3,6 +3,7 @@ package dccs
 import (
 	"encoding/json"
 	"log"
+	"strings"
 	"time"
 
 	"github.com/go-resty/resty/v2"
@@ -82,7 +83,7 @@ func New(config *app.Account) *DccsApp {
 	if len(config.DccsUsername) < 1 || len(config.DccsPassword) < 1 {
 		log.Panic("Missing DCCS credentials for", config.Name)
 	} else {
-		app.Client.SetBasicAuth(config.DccsUsername, config.DccsPassword)
+		app.Client.SetBasicAuth(strings.ToLower(config.DccsUsername), config.DccsPassword)
 	}
 
 	return &app
