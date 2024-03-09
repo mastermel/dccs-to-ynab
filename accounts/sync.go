@@ -20,9 +20,20 @@ func SyncLoop() {
 	sigCh := make(chan os.Signal, 1)
 	signal.Notify(sigCh, os.Interrupt)
 
-	ticker := time.NewTicker(time.Minute)
+	interval := time.Minute * 120
+	intervalEnv := os.Getenv("SYNC_INTERVAL")
+	if intervalEnv != "" {
+		i, err := time.ParseDuration(intervalEnv)
+		if err != nil {
+			fmt.Printf("'%s' is not a valid duration for SYNC_INTERVAL\n", intervalEnv)
+		} else {
+			interval = i
+		}
+	}
 
-	fmt.Println("Next sync in two hours")
+	ticker := time.NewTicker(interval)
+
+	fmt.Printf("Next sync in %.0f minutes\n", interval.Minutes())
 	fmt.Println("")
 
 	go func() {
