@@ -35,6 +35,17 @@ var syncCmd = &cobra.Command{
 	},
 }
 
+
+// syncLoopCmd represents the sync in loop command
+var syncLoopCmd = &cobra.Command{
+	Use:   "sync-loop",
+	Short: "Performs a transaction sync from DCCS -> YNAB for each account configured to sync on a regular interval.",
+	Run: func(cmd *cobra.Command, args []string) {
+		accounts.SyncLoop()
+	},
+}
+
 func init() {
 	rootCmd.AddCommand(syncCmd)
+	rootCmd.AddCommand(syncLoopCmd)
 }

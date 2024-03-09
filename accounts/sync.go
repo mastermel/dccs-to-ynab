@@ -3,11 +3,45 @@ package accounts
 import (
 	"fmt"
 	"time"
+	"os"
+	"os/signal"
 
 	"github.com/mastermel/dccs-to-ynab/app"
 	"github.com/mastermel/dccs-to-ynab/dccs"
 	"github.com/mastermel/dccs-to-ynab/ynab"
 )
+
+func SyncLoop() {
+	fmt.Println("Starting recurring sync")
+	fmt.Println("")
+
+	Sync()
+
+	sigCh := make(chan os.Signal, 1)
+	signal.Notify(sigCh, os.Interrupt)
+
+	ticker := time.NewTicker(time.Minute)
+
+	fmt.Println("Next sync in two hours")
+	fmt.Println("")
+
+	go func() {
+		defer ticker.Stop()
+
+		for {
+			select {
+				case <-ticker.C:
+					Sync()
+				case <-sigCh:
+					return
+			}
+		}
+	}()
+
+	<-sigCh
+	fmt.Println("")
+	fmt.Println("Received termination signal. Exiting...")
+}
 
 func Sync() {
 	fmt.Println("")
@@ -31,6 +65,7 @@ func Sync() {
 	}
 
 	config.Write()
+	fmt.Println("")
 }
 
 func syncAccount(account *app.Account) {
