@@ -31,3 +31,11 @@ jobs:
         run: |
           docker push mastermel/dccs-to-ynab:${{ github.ref_name }}
 
+      - name: Tag Docker image as "latest"
+        run: |
+          docker tag dccs-to-ynab:${{ github.ref_name }} mastermel/dccs-to-ynab:latest
+
+      - name: Push Docker image as "latest" to Docker Hub
+        run: |
+          docker push mastermel/dccs-to-ynab:latest
+
