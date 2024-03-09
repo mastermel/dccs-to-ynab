@@ -7,12 +7,11 @@ import (
 	"path/filepath"
 	"time"
 
-	homedir "github.com/mitchellh/go-homedir"
 	"gopkg.in/yaml.v2"
 )
 
 const LastSyncFormat = "2006-01-02T15:04:05"
-const configFileName = ".dccs-to-ynab.yaml"
+const configFileName = "dccs-to-ynab.yml"
 
 type Config struct {
 	Accounts []*Account `yaml:"accounts"`
@@ -32,14 +31,17 @@ type Account struct {
 }
 
 func getConfigFilePath() string {
-	// Find home directory.
-	home, err := homedir.Dir()
-	if err != nil {
-		log.Panic("Unable to find home directory: ", err)
-		return ""
+	configPath := os.Getenv("DCCS_TO_YNAB_CONFIG_PATH")
+	if configPath != "" {
+		return configPath
 	}
 
-	return filepath.Join(home, configFileName)
+	exePath, err := os.Executable()
+	if err != nil {
+		log.Panic("Failed to get executable path: ", err)
+	}
+
+	return filepath.Join(filepath.Dir(exePath), configFileName)
 }
 
 func (config *Config) Read() *Config {
