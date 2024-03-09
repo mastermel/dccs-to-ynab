@@ -11,7 +11,7 @@ import (
 )
 
 const LastSyncFormat = "2006-01-02T15:04:05"
-const configFileName = "dccs-to-ynab.yml"
+const ConfigFileName = "dccs-to-ynab.yml"
 
 type Config struct {
 	Accounts []*Account `yaml:"accounts"`
@@ -36,12 +36,13 @@ func getConfigFilePath() string {
 		return configPath
 	}
 
-	exePath, err := os.Executable()
+	ex, err := os.Executable()
 	if err != nil {
 		log.Panic("Failed to get executable path: ", err)
 	}
+	exePath := filepath.Dir(ex)
 
-	return filepath.Join(filepath.Dir(exePath), configFileName)
+	return filepath.Join(filepath.Dir(exePath), ConfigFileName)
 }
 
 func (config *Config) Read() *Config {

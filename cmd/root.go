@@ -23,10 +23,14 @@ package cmd
 
 import (
 	"fmt"
+	"log"
 	"os"
+	"path/filepath"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+
+	"github.com/mastermel/dccs-to-ynab/app"
 )
 
 var cfgFile string
@@ -60,16 +64,21 @@ func initConfig() {
 	if cfgFile != "" {
 		// Use config file from the flag.
 		viper.SetConfigFile(cfgFile)
+
+		fmt.Printf("Using provided config file at '%s'\n", cfgFile)
 	} else {
-		exePath, err := os.Executable()
+		ex, err := os.Executable()
 		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
+			log.Panic("Could not determine executable path", err)
 		}
+
+		exePath := filepath.Dir(ex)
 
 		// Search config in app's directory with name "dccs-to-ynab.yml"
 		viper.AddConfigPath(exePath)
-		viper.SetConfigName("dccs-to-ynab.yml")
+		viper.SetConfigName(app.ConfigFileName)
+
+		fmt.Printf("Using default config file at '%s/%s'\n", exePath, app.ConfigFileName)
 	}
 
 	viper.AutomaticEnv() // read in environment variables that match
