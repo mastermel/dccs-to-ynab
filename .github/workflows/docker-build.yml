@@ -21,12 +21,13 @@ jobs:
       
       - name: Build Docker image
         run: |
-          docker build -t dccs-to-ynab:${{ github.ref#refs/tags/ }} .
+          docker build -t dccs-to-ynab:${{ github.ref_name }} .
       
       - name: Tag Docker image
         run: |
-          docker tag dccs-to-ynab:${{ github.ref#refs/tags/ }} mastermel/dccs-to-ynab:${{ github.ref }}
+          docker tag dccs-to-ynab:${{ github.ref_name }} mastermel/dccs-to-ynab:${{ github.ref_name }}
       
       - name: Push Docker image to Docker Hub
         run: |
-          docker push mastermel/dccs-to-ynab:${{ github.ref#refs/tags/ }}
+          docker push mastermel/dccs-to-ynab:${{ github.ref_name }}
+
