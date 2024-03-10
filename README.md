@@ -41,7 +41,7 @@ services:
     ]
 
     environment:
-      - SYNC_INTERVAL="8h" # Change this to the interval you prefer
+      SYNC_INTERVAL: 8h # Change this to the interval you prefer
 
     volumes:
       - ${PWD}/config.yml:/dccs-to-ynab.yml
