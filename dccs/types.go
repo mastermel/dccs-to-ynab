@@ -40,8 +40,8 @@ type Card struct {
 	CardAccountId     int    `json:"cardAccountId"`
 	CardType          string `json:"cardType"`
 	CardState         string `json:"cardState"`
-	PinRequired       bool   `json:"pinReq"`
-	CardRequired      bool   `json:"cardReq"`
+	PinRequired       string `json:"pinReq"`
+	CardRequired      string `json:"cardReq"`
 	BundleGroup       string `json:"bundleGroup"`
 	BundleGroupOwner  bool   `json:"bundleGroupOwner"`
 	BankAccountOwner  bool   `json:"bankAccountOwner"`
