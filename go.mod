@@ -7,7 +7,7 @@ require (
 	github.com/go-resty/resty/v2 v2.14.0
 	github.com/manifoldco/promptui v0.9.0
 	github.com/pelletier/go-toml/v2 v2.1.1 // indirect
-	github.com/spf13/cobra v1.8.0
+	github.com/spf13/cobra v1.8.1
 	github.com/spf13/viper v1.18.2
 	go.bmvs.io/ynab v1.3.0
 	go.uber.org/multierr v1.11.0 // indirect
