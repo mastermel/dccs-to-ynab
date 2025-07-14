@@ -4,7 +4,7 @@ go 1.11
 
 require (
 	github.com/chzyer/readline v1.5.1 // indirect
-	github.com/go-resty/resty/v2 v2.15.3
+	github.com/go-resty/resty/v2 v2.16.5
 	github.com/manifoldco/promptui v0.9.0
 	github.com/spf13/cobra v1.8.1
 	github.com/spf13/viper v1.19.0
