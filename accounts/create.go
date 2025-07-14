@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/mastermel/dccs-to-ynab/app"
-	"go.bmvs.io/ynab"
+	"github.com/brunomvsouza/ynab.go"
 )
 
 func Create() {

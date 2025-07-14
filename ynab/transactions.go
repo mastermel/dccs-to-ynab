@@ -6,9 +6,9 @@ import (
 
 	"github.com/mastermel/dccs-to-ynab/app"
 	"github.com/mastermel/dccs-to-ynab/dccs"
-	"go.bmvs.io/ynab"
-	"go.bmvs.io/ynab/api"
-	"go.bmvs.io/ynab/api/transaction"
+	"github.com/brunomvsouza/ynab.go"
+	"github.com/brunomvsouza/ynab.go/api"
+	"github.com/brunomvsouza/ynab.go/api/transaction"
 )
 
 func ImportTransactionsToYnab(config *app.Account, dccsTransactions []*dccs.Transaction) error {

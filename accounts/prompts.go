@@ -10,7 +10,8 @@ import (
 	"github.com/manifoldco/promptui"
 	"github.com/mastermel/dccs-to-ynab/app"
 
-	"go.bmvs.io/ynab"
+	"github.com/brunomvsouza/ynab.go"
+	"github.com/brunomvsouza/ynab.go/api"
 )
 
 const labelDccsUsername = "DCCS Username"
@@ -146,7 +147,9 @@ func promptForYnabBudgetId(client ynab.ClientServicer) string {
 }
 
 func promptForYnabAccountId(client ynab.ClientServicer, ynabBudgetId string) string {
-	if accounts, err := client.Account().GetAccounts(ynabBudgetId); err == nil {
+	f := &api.Filter{}
+	if accountsSnapshot, err := client.Account().GetAccounts(ynabBudgetId, f); err == nil {
+		accounts := accountsSnapshot.Accounts
 		options := make([]string, 0)
 
 		for _, account := range accounts {
