@@ -4,7 +4,7 @@ go 1.24.5
 
 require (
 	github.com/brunomvsouza/ynab.go v1.5.0
-	github.com/go-resty/resty/v2 v2.17.0
+	github.com/go-resty/resty/v2 v2.17.1
 	github.com/manifoldco/promptui v0.9.0
 	github.com/spf13/cobra v1.10.1
 	github.com/spf13/viper v1.21.0
